@@ -15,7 +15,6 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Cpu, Cloud, PlusCircle, FileText, FileCode } from "lucide-react"
-import { BenchwarmerLogo } from "@/components/BenchwarmerLogo"
 
 type Phase = "welcome" | "transitioning" | "chat"
 
@@ -110,10 +109,6 @@ export default function ChatPage() {
                             phase === "transitioning" ? "opacity-0 scale-95" : "opacity-100 scale-100"
                         }`}
                     >
-                        {/* Logo pinned to top center */}
-                        <div className="flex justify-center pt-14 pb-0">
-                            <BenchwarmerLogo className="w-[520px] sm:w-[620px]" />
-                        </div>
 
                         {/* Triangle layout filling remaining space */}
                         <div className="flex-1 flex items-center justify-center px-10">

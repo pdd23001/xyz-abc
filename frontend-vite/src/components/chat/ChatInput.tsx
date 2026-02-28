@@ -21,7 +21,7 @@ interface ChatInputProps {
 export function ChatInput({
     onSend,
     disabled,
-    placeholder = "Message Benchwarmer...",
+    placeholder = "Message AI Algo Metric...",
     className,
     hideAttachButtons = false,
     bottomLeftContent,

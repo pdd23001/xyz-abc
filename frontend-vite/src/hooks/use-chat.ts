@@ -113,7 +113,7 @@ export function useChat() {
 
     // ── On mount: restore session from localStorage if it exists ──────────
     useEffect(() => {
-        const savedSessionId = localStorage.getItem("benchwarmer_session_id")
+        const savedSessionId = localStorage.getItem("ai_algo_metric_session_id")
         if (savedSessionId) {
             setSessionId(savedSessionId)
             fetchHistory(savedSessionId)
@@ -127,9 +127,9 @@ export function useChat() {
     // ── Persist session ID to localStorage ───────────────────────────────
     useEffect(() => {
         if (sessionId) {
-            localStorage.setItem("benchwarmer_session_id", sessionId)
+            localStorage.setItem("ai_algo_metric_session_id", sessionId)
         } else {
-            localStorage.removeItem("benchwarmer_session_id")
+            localStorage.removeItem("ai_algo_metric_session_id")
         }
     }, [sessionId])
 
@@ -169,7 +169,7 @@ export function useChat() {
         setCodedAlgorithms([])
         setBenchmarkProgress({ algorithms: [], status: null })
         setIsLoading(false)
-        localStorage.removeItem("benchwarmer_session_id")
+        localStorage.removeItem("ai_algo_metric_session_id")
     }
 
     const loadSession = (sid: string) => {
@@ -179,7 +179,7 @@ export function useChat() {
         setCodedAlgorithms([])
         setBenchmarkProgress({ algorithms: [], status: null })
         setIsLoading(false)
-        localStorage.setItem("benchwarmer_session_id", sid)
+        localStorage.setItem("ai_algo_metric_session_id", sid)
         fetchHistory(sid)
     }
 

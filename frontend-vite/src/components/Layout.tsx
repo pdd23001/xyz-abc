@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/Sidebar"
+import { Header } from "@/components/Header"
 
 interface LayoutProps {
     children: React.ReactNode
@@ -33,6 +34,7 @@ export function Layout({
                 onNewChat={onNewChat}
             />
             <main className="flex-1 flex flex-col relative w-full overflow-hidden">
+                <Header />
                 {children}
             </main>
         </div>

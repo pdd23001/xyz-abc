@@ -116,14 +116,7 @@ export function Sidebar({
         >
             {/* Header */}
             <div className={cn("flex items-center h-14 px-3 gap-2 flex-shrink-0", isCollapsed ? "justify-center" : "justify-between")}>
-                {!isCollapsed && (
-                    <div className="flex items-center gap-2 pl-1">
-                        <img src="/bench-logo.png" alt="Benchwarmer.AI" className="h-6 w-6 rounded-md object-cover" />
-                        <span className="font-semibold text-sm text-sidebar-foreground tracking-tight">
-                            benchwarmer
-                        </span>
-                    </div>
-                )}
+
                 <Button
                     variant="ghost"
                     size="icon"

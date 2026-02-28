@@ -1,4 +1,4 @@
-# benchwarmer.ai
+# AI Algo Metric
 
 **Benchmarking should not be a bottleneck of innovation.**
 
