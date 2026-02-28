@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
 import { Layout } from "@/components/Layout"
-import { MessageList } from "@/components/chat/MessageList"
-import { ChatInput } from "@/components/chat/ChatInput"
-import { UploadZone } from "@/components/chat/UploadZone"
+import { UploadCard } from "@/components/UploadCard"
+import { ChatPanel } from "@/components/ChatPanel"
+import { HeroHeader } from "@/components/HeroHeader"
 import { CodeViewer } from "@/components/chat/CodeViewer"
 import { SandboxPanel } from "@/components/chat/SandboxPanel"
 import { useChat } from "@/hooks/use-chat"
@@ -104,58 +104,60 @@ export default function ChatPage() {
             <div className="flex flex-col h-screen relative overflow-hidden">
                 {/* ── WELCOME / TRANSITIONING STATE ── */}
                 {isWelcome && (
-                    <div
-                        className={`flex flex-col h-full transition-all duration-500 ease-out ${
-                            phase === "transitioning" ? "opacity-0 scale-95" : "opacity-100 scale-100"
-                        }`}
-                    >
+                    <div className={`flex flex-col h-full transition-all duration-500 ease-out ${phase === "transitioning" ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
+                        <HeroHeader className="flex-shrink-0" />
 
-                        {/* Triangle layout filling remaining space */}
-                        <div className="flex-1 flex items-center justify-center px-10">
-                            <div className="relative w-full max-w-[1000px] h-[480px]">
-                                {/* Top-left: Research Papers */}
-                                <div className="absolute -left-4 top-0 w-[260px]">
-                                    <UploadZone
-                                        accept=".pdf"
-                                        multiple
-                                        icon={<FileText className="h-10 w-10" />}
-                                        title="Research Papers"
-                                        subtitle="Drop PDFs here"
-                                        files={pdfs}
-                                        onFilesChange={setPdfs}
-                                        className="py-10"
-                                    />
+                        {/* Main Content layout filling remaining space */}
+                        <div className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-10 pb-8 min-h-0 flex items-center justify-center">
+                            <div className="w-full h-full max-h-[500px] min-h-[350px] grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+                                {/* Left Column: Upload Cards */}
+                                <div className="lg:col-span-4 flex flex-col gap-4 h-full">
+                                    <div className="flex-1 min-h-[160px] relative">
+                                        <UploadCard
+                                            accept=".pdf"
+                                            multiple
+                                            icon={<FileText className="h-8 w-8" />}
+                                            title="Research Papers"
+                                            subtitle="Drop PDFs here"
+                                            helperText="Up to 50MB per file"
+                                            files={pdfs}
+                                            onFilesChange={setPdfs}
+                                            className="absolute inset-0 h-full w-full py-4 px-2"
+                                        />
+                                    </div>
+
+                                    <div className="flex-1 min-h-[160px] relative">
+                                        <UploadCard
+                                            accept=".py"
+                                            icon={<FileCode className="h-8 w-8" />}
+                                            title="Your Algorithm"
+                                            subtitle="Drop .py file"
+                                            files={algo ? [algo] : []}
+                                            onFilesChange={(files) => setAlgo(files[0] || undefined)}
+                                            className="absolute inset-0 h-full w-full py-4 px-2"
+                                        />
+                                    </div>
                                 </div>
 
-                                {/* Bottom-left: Your Algorithm */}
-                                <div className="absolute -left-4 bottom-0 w-[260px]">
-                                    <UploadZone
-                                        accept=".py"
-                                        icon={<FileCode className="h-10 w-10" />}
-                                        title="Your Algorithm"
-                                        subtitle="Drop .py file"
-                                        files={algo ? [algo] : []}
-                                        onFilesChange={(files) => setAlgo(files[0] || undefined)}
-                                        className="py-10"
-                                    />
-                                </div>
-
-                                {/* Right: Chat input — top and bottom aligned with upload zones */}
-                                <div className="absolute right-0 top-0 bottom-0 w-[64%]">
-                                    <ChatInput
+                                {/* Right Column: Chat Input */}
+                                <div className="lg:col-span-8 flex flex-col justify-center h-full min-h-[300px]">
+                                    <ChatPanel
+                                        isWelcome
+                                        messages={messages}
+                                        isLoading={isLoading}
                                         onSend={handleSend}
-                                        disabled={isLoading}
-                                        placeholder="Describe your problem..."
-                                        hideAttachButtons
-                                        className="h-full"
                                         pdfs={pdfs}
                                         onPdfsChange={setPdfs}
                                         algo={algo}
                                         onAlgoChange={setAlgo}
+                                        llmBackend={llmBackend}
+                                        setLlmBackend={setLlmBackend}
+                                        executionMode={executionMode}
+                                        setExecutionMode={setExecutionMode}
                                         bottomLeftContent={
                                             <div className="flex items-center gap-1.5">
                                                 <Select value={llmBackend} onValueChange={setLlmBackend}>
-                                                    <SelectTrigger className="w-[100px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg">
+                                                    <SelectTrigger className="w-[100px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
                                                         <SelectValue placeholder="Model" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -164,7 +166,7 @@ export default function ChatPage() {
                                                     </SelectContent>
                                                 </Select>
                                                 <Select value={executionMode} onValueChange={setExecutionMode}>
-                                                    <SelectTrigger className="w-[130px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg">
+                                                    <SelectTrigger className="w-[130px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
                                                         {executionMode === "local" ? (
                                                             <Cpu className="mr-1 h-3 w-3 text-muted-foreground" />
                                                         ) : (
@@ -258,19 +260,13 @@ export default function ChatPage() {
                             )}
 
                             {/* Chat panel */}
-                            <div className="flex-1 min-w-0 flex flex-col">
-                                <div className="flex-1 min-h-0 flex flex-col">
-                                    <MessageList
-                                        messages={messages}
-                                        isLoading={isLoading}
-                                        onAlgorithmSelect={handleAlgorithmSelect}
-                                        onChoiceSelect={handleChoiceSelect}
-                                    />
-                                </div>
-                                <div className="p-4 max-w-3xl w-full mx-auto flex-shrink-0">
-                                    <ChatInput onSend={handleSend} disabled={isLoading} />
-                                </div>
-                            </div>
+                            <ChatPanel
+                                messages={messages}
+                                isLoading={isLoading}
+                                onSend={handleSend}
+                                onAlgorithmSelect={handleAlgorithmSelect}
+                                onChoiceSelect={handleChoiceSelect}
+                            />
                         </div>
                     </div>
                 )}

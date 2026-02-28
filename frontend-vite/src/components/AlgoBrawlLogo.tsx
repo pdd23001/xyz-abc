@@ -1,14 +1,14 @@
-interface BenchwarmerLogoProps {
+interface AlgoBrawlLogoProps {
     className?: string
     /** Compact mode for the header — smaller, fewer particles, no tagline */
     compact?: boolean
 }
 
-export function BenchwarmerLogo({ className }: BenchwarmerLogoProps) {
+export function AlgoBrawlLogo({ className }: AlgoBrawlLogoProps) {
     // simple text logo
     return (
         <div className={`flex items-center justify-center font-bold ${className || ""}`}>
-            AI Algo Metric
+            AlgoBrawl
         </div>
     )
 }

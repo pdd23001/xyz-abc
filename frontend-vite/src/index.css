@@ -44,37 +44,44 @@
   }
 
   .dark {
-    --background: 0 0% 9%;
-    --foreground: 0 0% 95%;
+    /* Light Blue & White Base */
+    --background: 204 100% 98%;
+    /* sky-50 */
+    --foreground: 222 47% 11%;
+    /* slate-900 */
 
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 199 89% 48%;
+    /* sky-500 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 204 100% 97%;
+    /* sky-50/50 */
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    /* slate-500 */
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 0% 83.1%;
+    --border: 214 32% 91%;
+    /* slate-200 */
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
 
-    --sidebar: 0 0% 7%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 14.9%;
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
   }
 }
 
@@ -84,7 +91,26 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    /* Set the dynamic layered gradient background */
+    @apply text-foreground font-sans antialiased;
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #bae6fd 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 
@@ -116,7 +142,8 @@
   @apply mb-3 last:mb-0;
 }
 
-.prose-chat ul, .prose-chat ol {
+.prose-chat ul,
+.prose-chat ol {
   @apply mb-3 ml-4 space-y-1;
 }
 
@@ -137,13 +164,23 @@
   @apply bg-transparent p-0;
 }
 
-.prose-chat h1, .prose-chat h2, .prose-chat h3 {
+.prose-chat h1,
+.prose-chat h2,
+.prose-chat h3 {
   @apply font-semibold mt-4 mb-2;
 }
 
-.prose-chat h1 { @apply text-lg; }
-.prose-chat h2 { @apply text-base; }
-.prose-chat h3 { @apply text-sm; }
+.prose-chat h1 {
+  @apply text-lg;
+}
+
+.prose-chat h2 {
+  @apply text-base;
+}
+
+.prose-chat h3 {
+  @apply text-sm;
+}
 
 .prose-chat strong {
   @apply font-semibold text-foreground;
