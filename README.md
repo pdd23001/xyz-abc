@@ -56,7 +56,7 @@ AlgoBrawl automates the painful workflow of algorithm benchmarking. Upload your 
                 ┌───────────────┴───────────────────┐
                 │                                   │
                 ▼                                   ▼
-         OrchestratorAgent                    SQLite (chat.db)
+         OrchestratorAgent                    Supabase (PostgreSQL)
          (conversational router)              session persistence
                 │
     ┌───────────┼────────────────┐
@@ -66,10 +66,10 @@ AlgoBrawl automates the painful workflow of algorithm benchmarking. Upload your 
  (config)     (code generation)    (visualizations)
     │           │                │
     ▼           ▼                ▼
- LLM Backends  AlgorithmWrapper  matplotlib
- ├─ Claude     smoke-test →
- └─ Nemotron   register
-   (DGX Spark)        │
+ Claude LLM    AlgorithmWrapper  matplotlib
+               smoke-test →
+               register
+                      │
                       ▼
                BenchmarkRunner
                ├─ Sequential (local subprocesses)
@@ -86,19 +86,16 @@ The system is driven by a central **Orchestrator Agent** that acts as the conver
 | Agent | Role | Model |
 |---|---|---|
 | **Orchestrator** | Central router — understands intent, dispatches tools, manages multi-turn state | Claude Sonnet 4 |
-| **Intake** | Parses NL problem descriptions + research PDFs into structured benchmark configs | Claude Sonnet 4 / Nemotron |
+| **Intake** | Parses NL problem descriptions + research PDFs into structured benchmark configs | Claude Sonnet 4 |
 | **Implementation** | Generates `AlgorithmWrapper` subclasses from algorithm specs, smoke-tests in sandbox | Claude Opus 4.6 |
 | **Plot** | Generates matplotlib visualizations from NL requests over benchmark results | Claude Sonnet 4 |
 
-### LLM Backend: Claude vs Nemotron
+### LLM Backend
 
-The intake and orchestration stages are the most token-intensive parts of the pipeline — they process full research papers, lengthy problem descriptions, and maintain multi-turn conversation context. We designed the system to support two LLM backends:
+The system uses Anthropic's Claude models across the pipeline:
 
-- **Claude Opus 4.6** (Anthropic) — Used for the **Implementation Agent** where code generation accuracy is critical. Opus 4.6 is Anthropic's most capable model for coding tasks, ensuring the generated algorithm implementations are correct, efficient, and faithful to the source papers.
-- **Claude Sonnet 4** (Anthropic) — Used for orchestration, intake, and plot generation where speed and tool-use capability matter more than raw coding power.
-- **Nemotron-3-Nano-30B** (NVIDIA, open-source) — Deployed locally on **NVIDIA DGX Spark** hardware. As an open-source model, Nemotron eliminates per-token API costs entirely, making it a strong choice for the high-context intake stage where papers and descriptions can consume tens of thousands of tokens per request. Running on DGX Spark also means inference stays on-premises with zero network latency and full data privacy — important when processing unpublished research.
-
-Users can select either backend from the chat UI. This dual-backend design lets teams balance cost, speed, and capability based on their workload.
+- **Claude Opus 4.6** — Used for the **Implementation Agent** where code generation accuracy is critical. Opus 4.6 is Anthropic's most capable model for coding tasks, ensuring the generated algorithm implementations are correct, efficient, and faithful to the source papers.
+- **Claude Sonnet 4** — Used for orchestration, intake, and plot generation where speed and tool-use capability matter more than raw coding power.
 
 ---
 
@@ -145,13 +142,12 @@ The AlgoBrawl agent has also been deployed on [Fetch.ai's Agentverse](https://ag
 - **Python 3.10+**
 - **FastAPI** + **Uvicorn** — API server with SSE streaming for real-time progress
 - **Anthropic SDK** — Claude Opus 4.6 for code generation, Claude Sonnet 4 for orchestration and intake
-- **NVIDIA Nemotron** — Nemotron-3-Nano-30B deployed on **NVIDIA DGX Spark** as an alternative LLM backend for intake, running locally on DGX hardware for low-latency inference without cloud API costs
 - **Modal** — Serverless sandboxed execution with per-algorithm parallelism
 - **PyMuPDF** — PDF text extraction for research paper parsing
 - **Pandas / NumPy / NetworkX / SciPy** — Graph generation, data processing
 - **Matplotlib** — AI-generated comparison charts
 - **Pydantic** — Data validation and configuration models
-- **SQLite** — Chat session history and algorithm persistence
+- **Supabase** — Chat session history, algorithm persistence, and session management
 
 ### Frontend (`frontend-vite/`)
 - **React 19** + **TypeScript**
@@ -173,7 +169,7 @@ AlgoBrawl/
 │   ├── server.py                    # FastAPI app — SSE chat, REST endpoints
 │   ├── benchwarmer/
 │   │   ├── config.py                # Pydantic models (BenchmarkConfig, AlgorithmSpec, etc.)
-│   │   ├── database.py              # SQLite session/message/algorithm persistence
+│   │   ├── database.py              # Supabase session/message/algorithm persistence
 │   │   ├── agents/
 │   │   │   ├── orchestrator.py      # Central orchestrator (tool-use loop, state machine)
 │   │   │   ├── intake.py            # NL + PDF → structured config agent
@@ -235,8 +231,8 @@ AlgoBrawl/
 - **Python 3.10+** — [python.org](https://www.python.org/downloads/)
 - **Node.js 18+** — [nodejs.org](https://nodejs.org/)
 - **Anthropic API Key** — [console.anthropic.com](https://console.anthropic.com/)
+- **Supabase project** — for database persistence ([supabase.com](https://supabase.com))
 - *(Optional)* **Modal account** — for parallel cloud sandbox execution ([modal.com](https://modal.com))
-- *(Optional)* **NVIDIA DGX Spark** — for running Nemotron locally as an alternative LLM backend
 
 ---
 
@@ -274,10 +270,12 @@ Inside `agent-backend/`, copy the example env file:
 cp .env.example .env
 ```
 
-Edit `.env` and add your API key:
+Edit `.env` and add your keys:
 
 ```env
 ANTHROPIC_API_KEY=sk-ant-...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-key
 ```
 
 See [Environment Variables](#environment-variables) for the full list of options.
@@ -329,19 +327,7 @@ To execute benchmarks in parallel Modal sandboxes:
 
 Each algorithm will spin up its own isolated cloud sandbox and run in parallel — you'll see real-time progress for each sandbox in the visualization panel.
 
-### Running with Nemotron on DGX Spark
 
-To use NVIDIA Nemotron as the LLM backend (instead of Claude) for the intake and orchestration agent:
-
-1. Deploy Nemotron-3-Nano-30B on your DGX Spark using [Ollama](https://ollama.com) or any inference server that exposes an OpenAI-compatible API.
-2. Set the endpoint in your `.env`:
-   ```env
-   NEMOTRON_URL=http://<your-dgx-spark-ip>:11434/v1
-   NEMOTRON_MODEL=hf.co/unsloth/Nemotron-3-Nano-30B-A3B-GGUF:Q4_K_M
-   ```
-3. Select **Nemotron** as the LLM backend in the chat UI.
-
-This runs inference entirely on local DGX hardware — no cloud API costs, low latency, and full data privacy.
 
 ---
 
@@ -371,8 +357,8 @@ Create a `.env` file in `agent-backend/` with the following:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `ANTHROPIC_API_KEY` | **Yes** | Anthropic API key for Claude Opus 4.6 and Sonnet 4 |
-| `NEMOTRON_URL` | No | Nemotron inference endpoint on DGX Spark (e.g., `http://10.19.177.52:11434/v1`) |
-| `NEMOTRON_MODEL` | No | Nemotron model identifier (default: `hf.co/unsloth/Nemotron-3-Nano-30B-A3B-GGUF:Q4_K_M`) |
+| `SUPABASE_URL` | **Yes** | Supabase project URL (e.g., `https://your-project.supabase.co`) |
+| `SUPABASE_KEY` | **Yes** | Supabase service role key |
 | `MODAL_TOKEN_ID` | No | Modal API token ID (for cloud sandbox execution) |
 | `MODAL_TOKEN_SECRET` | No | Modal API token secret |
 
