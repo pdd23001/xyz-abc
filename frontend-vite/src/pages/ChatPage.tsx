@@ -107,84 +107,77 @@ export default function ChatPage() {
                     <div className={`flex flex-col h-full transition-all duration-500 ease-out ${phase === "transitioning" ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
                         <HeroHeader className="flex-shrink-0" />
 
-                        {/* Main Content layout filling remaining space */}
-                        <div className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-10 pb-8 min-h-0 flex items-center justify-center">
-                            <div className="w-full h-full max-h-[500px] min-h-[350px] grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                                {/* Left Column: Upload Cards */}
-                                <div className="lg:col-span-4 flex flex-col gap-4 h-full">
-                                    <div className="flex-1 min-h-[160px] relative">
-                                        <UploadCard
-                                            accept=".pdf"
-                                            multiple
-                                            icon={<FileText className="h-8 w-8" />}
-                                            title="Research Papers"
-                                            subtitle="Drop PDFs here"
-                                            helperText="Up to 50MB per file"
-                                            files={pdfs}
-                                            onFilesChange={setPdfs}
-                                            className="absolute inset-0 h-full w-full py-4 px-2"
-                                        />
-                                    </div>
+                        {/* Centered content area */}
+                        <div className="flex-1 w-full max-w-3xl mx-auto px-6 pb-8 min-h-0 flex flex-col items-center justify-center gap-8">
+                            {/* Upload Cards — side by side, centered */}
+                            <div className="w-full grid grid-cols-2 gap-6 max-w-lg">
+                                <UploadCard
+                                    accept=".pdf"
+                                    multiple
+                                    icon={<FileText className="h-8 w-8" />}
+                                    title="Research Papers"
+                                    subtitle="Drop PDFs here"
+                                    helperText="Up to 50MB per file"
+                                    files={pdfs}
+                                    onFilesChange={setPdfs}
+                                    className="h-[180px] py-4 px-2"
+                                />
+                                <UploadCard
+                                    accept=".py"
+                                    icon={<FileCode className="h-8 w-8" />}
+                                    title="Your Algorithm"
+                                    subtitle="Drop .py file"
+                                    files={algo ? [algo] : []}
+                                    onFilesChange={(files) => setAlgo(files[0] || undefined)}
+                                    className="h-[180px] py-4 px-2"
+                                />
+                            </div>
 
-                                    <div className="flex-1 min-h-[160px] relative">
-                                        <UploadCard
-                                            accept=".py"
-                                            icon={<FileCode className="h-8 w-8" />}
-                                            title="Your Algorithm"
-                                            subtitle="Drop .py file"
-                                            files={algo ? [algo] : []}
-                                            onFilesChange={(files) => setAlgo(files[0] || undefined)}
-                                            className="absolute inset-0 h-full w-full py-4 px-2"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Right Column: Chat Input */}
-                                <div className="lg:col-span-8 flex flex-col justify-center h-full min-h-[300px]">
-                                    <ChatPanel
-                                        isWelcome
-                                        messages={messages}
-                                        isLoading={isLoading}
-                                        onSend={handleSend}
-                                        pdfs={pdfs}
-                                        onPdfsChange={setPdfs}
-                                        algo={algo}
-                                        onAlgoChange={setAlgo}
-                                        llmBackend={llmBackend}
-                                        setLlmBackend={setLlmBackend}
-                                        executionMode={executionMode}
-                                        setExecutionMode={setExecutionMode}
-                                        bottomLeftContent={
-                                            <div className="flex items-center gap-1.5">
-                                                <Select value={llmBackend} onValueChange={setLlmBackend}>
-                                                    <SelectTrigger className="w-[100px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
-                                                        <SelectValue placeholder="Model" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="claude">Claude</SelectItem>
-                                                        <SelectItem value="nemotron">Nemotron</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                                <Select value={executionMode} onValueChange={setExecutionMode}>
-                                                    <SelectTrigger className="w-[130px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
-                                                        {executionMode === "local" ? (
-                                                            <Cpu className="mr-1 h-3 w-3 text-muted-foreground" />
-                                                        ) : (
-                                                            <Cloud className="mr-1 h-3 w-3 text-muted-foreground" />
-                                                        )}
-                                                        <SelectValue placeholder="Mode" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="local">Sequential</SelectItem>
-                                                        <SelectItem value="modal">Modal CPU Sandbox</SelectItem>
-                                                        <SelectItem value="ssh_gpu" disabled>SSH GPU Compute (coming soon)</SelectItem>
-                                                        <SelectItem value="modal_gpu" disabled>Modal GPU Sandbox (coming soon)</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        }
-                                    />
-                                </div>
+                            {/* Chat Input — full width, centered below */}
+                            <div className="w-full">
+                                <ChatPanel
+                                    isWelcome
+                                    messages={messages}
+                                    isLoading={isLoading}
+                                    onSend={handleSend}
+                                    pdfs={pdfs}
+                                    onPdfsChange={setPdfs}
+                                    algo={algo}
+                                    onAlgoChange={setAlgo}
+                                    llmBackend={llmBackend}
+                                    setLlmBackend={setLlmBackend}
+                                    executionMode={executionMode}
+                                    setExecutionMode={setExecutionMode}
+                                    bottomLeftContent={
+                                        <div className="flex items-center gap-1.5">
+                                            <Select value={llmBackend} onValueChange={setLlmBackend}>
+                                                <SelectTrigger className="w-[100px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
+                                                    <SelectValue placeholder="Model" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="claude">Claude</SelectItem>
+                                                    <SelectItem value="nemotron">Nemotron</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <Select value={executionMode} onValueChange={setExecutionMode}>
+                                                <SelectTrigger className="w-[130px] h-7 text-[11px] bg-background/50 border-border/50 rounded-lg focus:ring-violet-500/30">
+                                                    {executionMode === "local" ? (
+                                                        <Cpu className="mr-1 h-3 w-3 text-muted-foreground" />
+                                                    ) : (
+                                                        <Cloud className="mr-1 h-3 w-3 text-muted-foreground" />
+                                                    )}
+                                                    <SelectValue placeholder="Mode" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="local">Sequential</SelectItem>
+                                                    <SelectItem value="modal">Modal CPU Sandbox</SelectItem>
+                                                    <SelectItem value="ssh_gpu" disabled>SSH GPU Compute (coming soon)</SelectItem>
+                                                    <SelectItem value="modal_gpu" disabled>Modal GPU Sandbox (coming soon)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    }
+                                />
                             </div>
                         </div>
                     </div>

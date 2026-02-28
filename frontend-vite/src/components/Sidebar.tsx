@@ -200,7 +200,7 @@ export function Sidebar({
                                 {historySessions.map((session) => (
                                     <div
                                         key={session.id}
-                                        className="group relative flex items-center"
+                                        className="group flex items-center"
                                     >
                                         {editingId === session.id ? (
                                             <div className="flex items-center w-full px-2 h-8">
@@ -222,7 +222,7 @@ export function Sidebar({
                                                 <Button
                                                     variant="ghost"
                                                     className={cn(
-                                                        "w-full justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg pr-14 transition-all duration-300",
+                                                        "flex-1 min-w-0 justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg transition-all duration-300",
                                                         isCollapsed && "justify-center px-0",
                                                         "text-muted-foreground hover:text-sky-700 hover:bg-white/60"
                                                     )}
@@ -235,26 +235,26 @@ export function Sidebar({
                                                     )}
                                                 </Button>
                                                 {!isCollapsed && (
-                                                    <div className="absolute right-1 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <button
-                                                            className="p-1 rounded hover:bg-muted text-muted-foreground/40 hover:text-foreground"
+                                                            className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground"
                                                             onClick={(e) => {
                                                                 e.stopPropagation()
                                                                 startRename(session)
                                                             }}
                                                             title="Rename chat"
                                                         >
-                                                            <Pencil className="h-3 w-3" />
+                                                            <Pencil className="h-3.5 w-3.5" />
                                                         </button>
                                                         <button
-                                                            className="p-1 rounded hover:bg-destructive/20 hover:text-destructive text-muted-foreground/40"
+                                                            className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive"
                                                             onClick={(e) => {
                                                                 e.stopPropagation()
                                                                 handleDeleteSession(session.id)
                                                             }}
                                                             title="Delete chat"
                                                         >
-                                                            <Trash2 className="h-3 w-3" />
+                                                            <Trash2 className="h-3.5 w-3.5" />
                                                         </button>
                                                     </div>
                                                 )}
