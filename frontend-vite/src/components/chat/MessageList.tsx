@@ -163,11 +163,11 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                             /* ── Assistant Message ── */
                             <div className="flex gap-3 w-full">
                                 <div className="flex-shrink-0 mt-1">
-                                    <img src="/bench-logo.png" alt="Benchwarmer" className="h-7 w-7 rounded-full object-cover" />
+                                    <img src="/bench-logo.png" alt="AI Algo Metric" className="h-7 w-7 rounded-full object-cover" />
                                 </div>
                                 <div className="flex-1 min-w-0 space-y-2">
                                     <span className="text-xs font-medium text-muted-foreground">
-                                        benchwarmer
+                                        AI Algo Metric
                                     </span>
                                     <div>
                                         <ParsedMessageContent

@@ -1,5 +1,5 @@
 {
-  "name": "benchwarmer-ai",
+  "name": "ai-algo-metric",
   "private": true,
   "scripts": {
     "build": "cd frontend-vite && npm run build"
