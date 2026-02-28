@@ -72,7 +72,7 @@ export function ChatInput({
     const hasContent = input.trim() || pdfs.length > 0 || algo
 
     return (
-        <div className={`relative flex flex-col rounded-2xl border border-border bg-secondary/50 shadow-sm transition-colors focus-within:border-muted-foreground/30 ${className || ""}`}>
+        <div className={`relative flex flex-col rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:border-cyan-400/40 focus-within:ring-4 focus-within:ring-cyan-500/10 focus-within:bg-white/[0.05] hover:border-white/20 ${className || ""}`}>
             {/* File Previews */}
             {(pdfs.length > 0 || algo) && (
                 <div className="flex gap-2 px-4 pt-3 overflow-x-auto">
@@ -93,8 +93,8 @@ export function ChatInput({
                         </div>
                     ))}
                     {algo && (
-                        <div className="flex items-center gap-2 bg-violet-500/10 px-3 py-1.5 rounded-lg text-xs font-medium border border-violet-500/20">
-                            <FileCode size={12} className="text-violet-400" />
+                        <div className="flex items-center gap-2 bg-cyan-500/10 px-3 py-1.5 rounded-lg text-xs font-medium border border-cyan-500/20">
+                            <FileCode size={12} className="text-cyan-400" />
                             <span className="truncate max-w-[120px]">{algo.name}</span>
                             <button
                                 type="button"
@@ -178,9 +178,9 @@ export function ChatInput({
                     size="icon"
                     disabled={disabled || !hasContent}
                     onClick={() => handleSubmit()}
-                    className="h-8 w-8 rounded-lg bg-foreground text-background hover:bg-foreground/90 disabled:opacity-30"
+                    className="h-8 w-8 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:from-cyan-400 hover:to-violet-400 disabled:opacity-30 disabled:from-muted-foreground/20 disabled:to-muted-foreground/20 disabled:text-muted-foreground/40 transition-all duration-300 active:scale-90 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] group/send"
                 >
-                    <ArrowUp className="h-4 w-4" />
+                    <ArrowUp className="h-4 w-4 transition-transform group-hover/send:-translate-y-0.5" />
                     <span className="sr-only">Send</span>
                 </Button>
             </div>

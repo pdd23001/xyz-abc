@@ -108,11 +108,10 @@ export function Sidebar({
     return (
         <div
             className={cn(
-                "relative flex flex-col h-screen border-r border-sidebar-border transition-all duration-200 ease-in-out",
+                "relative flex flex-col h-screen border-r border-white/50 bg-white/50 backdrop-blur-xl transition-all duration-300 ease-in-out z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]",
                 isCollapsed ? "w-[52px]" : "w-[260px]",
                 className
             )}
-            style={{ backgroundColor: "hsl(var(--sidebar))" }}
         >
             {/* Header */}
             <div className={cn("flex items-center h-14 px-3 gap-2 flex-shrink-0", isCollapsed ? "justify-center" : "justify-between")}>
@@ -163,16 +162,16 @@ export function Sidebar({
                                     key={name}
                                     variant="ghost"
                                     className={cn(
-                                        "w-full justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg",
+                                        "w-full justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg transition-all duration-300",
                                         isCollapsed && "justify-center px-0",
                                         activeAlgorithm === name
-                                            ? "bg-violet-500/10 text-violet-300 border border-violet-500/20"
-                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                            ? "bg-sky-500/10 text-sky-700 border-l-2 border-sky-400 bg-gradient-to-r from-sky-500/10 to-transparent shadow-[inset_2px_0_10px_rgba(14,165,233,0.05)] rounded-l-none"
+                                            : "text-muted-foreground hover:text-sky-700 hover:bg-white/60"
                                     )}
                                     onClick={() => onAlgorithmClick?.(name)}
                                     title={`${name}.py — click to view code`}
                                 >
-                                    <FileCode className="h-3.5 w-3.5 shrink-0 text-violet-400" />
+                                    <FileCode className={cn("h-3.5 w-3.5 shrink-0", activeAlgorithm === name ? "text-sky-600" : "text-sky-500")} />
                                     {!isCollapsed && (
                                         <span className="truncate">{name}.py</span>
                                     )}
@@ -206,7 +205,7 @@ export function Sidebar({
                                                 <MessageSquare className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60 mr-2" />
                                                 <input
                                                     autoFocus
-                                                    className="flex-1 min-w-0 bg-transparent text-xs text-foreground outline-none border-b border-violet-500/50 py-0.5"
+                                                    className="flex-1 min-w-0 bg-transparent text-xs text-foreground outline-none border-b border-sky-400/50 py-0.5"
                                                     value={editingTitle}
                                                     onChange={(e) => setEditingTitle(e.target.value)}
                                                     onKeyDown={(e) => {
@@ -221,9 +220,9 @@ export function Sidebar({
                                                 <Button
                                                     variant="ghost"
                                                     className={cn(
-                                                        "w-full justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg pr-14",
+                                                        "w-full justify-start gap-2.5 h-8 text-xs font-normal truncate rounded-lg pr-14 transition-all duration-300",
                                                         isCollapsed && "justify-center px-0",
-                                                        "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                                        "text-muted-foreground hover:text-sky-700 hover:bg-white/60"
                                                     )}
                                                     onClick={() => onSessionClick?.(session.id)}
                                                     title={session.title}

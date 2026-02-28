@@ -146,27 +146,28 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
     }, [messages])
 
     return (
-        <div className="flex-1 overflow-y-auto w-full">
-            <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
+        <div className="flex-1 overflow-y-auto w-full px-2">
+            <div className="max-w-3xl mx-auto py-8 flex flex-col gap-8">
                 {visibleMessages.map((message) => (
-                    <div key={message.id} className="w-full">
+                    <div key={message.id} className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-auto">
                         {message.role === "user" ? (
                             /* ── User Message ── */
                             <div className="flex justify-end">
-                                <div className="max-w-[80%] bg-secondary text-secondary-foreground rounded-2xl rounded-br-md px-4 py-3">
-                                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                                <div className="max-w-[85%] bg-sky-500 border border-sky-400 text-white rounded-2xl rounded-br-sm px-5 py-3.5 shadow-md">
+                                    <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
                                         {message.content}
                                     </p>
                                 </div>
                             </div>
                         ) : (
                             /* ── Assistant Message ── */
-                            <div className="flex gap-3 w-full">
-                                <div className="flex-shrink-0 mt-1">
-                                    <img src="/bench-logo.png" alt="AI Algo Metric" className="h-7 w-7 rounded-full object-cover" />
+                            <div className="flex gap-4 w-full">
+                                    <div className="h-8 w-8 rounded-full bg-white/60 border border-sky-400/30 flex items-center justify-center shadow-[0_4px_10px_rgba(14,165,233,0.1)] overflow-hidden">
+                                        <img src="/bench-logo.png" alt="AI Algo Metric" className="h-6 w-6 object-cover" />
+                                    </div>
                                 </div>
                                 <div className="flex-1 min-w-0 space-y-2">
-                                    <span className="text-xs font-medium text-muted-foreground">
+                                    <span className="text-xs font-semibold text-sky-700 tracking-wide">
                                         AI Algo Metric
                                     </span>
                                     <div>
@@ -231,8 +232,8 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                                                         tool.status === "running"
                                                             ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                                                             : tool.status === "completed"
-                                                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                                            : "bg-red-500/10 text-red-400 border border-red-500/20"
+                                                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                                                : "bg-red-500/10 text-red-400 border border-red-500/20"
                                                     )}
                                                 >
                                                     <div
@@ -241,8 +242,8 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                                                             tool.status === "running"
                                                                 ? "bg-amber-400 animate-pulse"
                                                                 : tool.status === "completed"
-                                                                ? "bg-emerald-400"
-                                                                : "bg-red-400"
+                                                                    ? "bg-emerald-400"
+                                                                    : "bg-red-400"
                                                         )}
                                                     />
                                                     <span className="font-mono">{tool.tool}</span>
@@ -261,25 +262,26 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                                     )}
                                 </div>
                             </div>
-                        )}
-                    </div>
+                )}
+            </div>
                 ))}
 
-                {/* Loading indicator */}
-                {isLoading && (
-                    <div className="flex gap-3 w-full">
-                        <div className="flex-shrink-0 mt-1">
-                            <img src="/bench-logo.png" alt="Benchwarmer" className="h-7 w-7 rounded-full object-cover" />
-                        </div>
-                        <div className="flex items-center gap-2 pt-1">
-                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Thinking...</span>
+            {/* Loading indicator */}
+            {isLoading && (
+                <div className="flex gap-4 w-full animate-in fade-in duration-500">
+                    <div className="flex-shrink-0 mt-1">
+                        <div className="h-8 w-8 rounded-full bg-secondary/80 border border-border/50 flex items-center justify-center shadow-sm overflow-hidden">
+                            <img src="/bench-logo.png" alt="Benchwarmer" className="h-6 w-6 object-cover opacity-70" />
                         </div>
                     </div>
-                )}
+                    <div className="flex items-center gap-2.5 pt-1.5 ml-1">
+                        <Loader2 className="h-4 w-4 animate-spin text-sky-500" />
+                        <span className="text-sm font-medium text-slate-500 tracking-wide animate-pulse">Thinking...</span>
+                    </div>
+                </div>
+            )}
 
-                <div ref={scrollRef} />
-            </div>
+            <div ref={scrollRef} className="h-4" />
         </div>
     )
 }
