@@ -162,13 +162,14 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                         ) : (
                             /* ── Assistant Message ── */
                             <div className="flex gap-4 w-full">
+                                <div className="flex-shrink-0 mt-1">
                                     <div className="h-8 w-8 rounded-full bg-white/60 border border-sky-400/30 flex items-center justify-center shadow-[0_4px_10px_rgba(14,165,233,0.1)] overflow-hidden">
-                                        <img src="/bench-logo.png" alt="AI Algo Metric" className="h-6 w-6 object-cover" />
+                                        <img src="/bench-logo.png" alt="AlgoBrawl" className="h-6 w-6 object-cover" />
                                     </div>
                                 </div>
                                 <div className="flex-1 min-w-0 space-y-2">
                                     <span className="text-xs font-semibold text-sky-700 tracking-wide">
-                                        AI Algo Metric
+                                        AlgoBrawl
                                     </span>
                                     <div>
                                         <ParsedMessageContent
@@ -262,26 +263,27 @@ export function MessageList({ messages, isLoading, onAlgorithmSelect, onChoiceSe
                                     )}
                                 </div>
                             </div>
-                )}
-            </div>
+                        )}
+                    </div>
                 ))}
 
-            {/* Loading indicator */}
-            {isLoading && (
-                <div className="flex gap-4 w-full animate-in fade-in duration-500">
-                    <div className="flex-shrink-0 mt-1">
-                        <div className="h-8 w-8 rounded-full bg-secondary/80 border border-border/50 flex items-center justify-center shadow-sm overflow-hidden">
-                            <img src="/bench-logo.png" alt="Benchwarmer" className="h-6 w-6 object-cover opacity-70" />
+                {/* Loading indicator */}
+                {isLoading && (
+                    <div className="flex gap-4 w-full animate-in fade-in duration-500">
+                        <div className="flex-shrink-0 mt-1">
+                            <div className="h-8 w-8 rounded-full bg-secondary/80 border border-border/50 flex items-center justify-center shadow-sm overflow-hidden">
+                                <img src="/bench-logo.png" alt="AlgoBrawl" className="h-6 w-6 object-cover opacity-70" />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2.5 pt-1.5 ml-1">
+                            <Loader2 className="h-4 w-4 animate-spin text-sky-500" />
+                            <span className="text-sm font-medium text-slate-500 tracking-wide animate-pulse">Thinking...</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2.5 pt-1.5 ml-1">
-                        <Loader2 className="h-4 w-4 animate-spin text-sky-500" />
-                        <span className="text-sm font-medium text-slate-500 tracking-wide animate-pulse">Thinking...</span>
-                    </div>
-                </div>
-            )}
+                )}
 
-            <div ref={scrollRef} className="h-4" />
+                <div ref={scrollRef} className="h-4" />
+            </div>
         </div>
     )
 }

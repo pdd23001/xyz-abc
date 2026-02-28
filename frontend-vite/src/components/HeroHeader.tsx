@@ -1,4 +1,4 @@
-import { BenchwarmerLogo } from "@/components/BenchwarmerLogo"
+import { AlgoBrawlLogo } from "@/components/AlgoBrawlLogo"
 import { cn } from "@/lib/utils"
 
 export function HeroHeader({ className }: { className?: string }) {
@@ -11,10 +11,10 @@ export function HeroHeader({ className }: { className?: string }) {
             </div>
 
             <div className="relative z-10 flex flex-col items-center gap-6">
-                <BenchwarmerLogo className="w-[340px] sm:w-[480px] drop-shadow-2xl" />
+                <AlgoBrawlLogo className="w-[340px] sm:w-[480px] drop-shadow-2xl" />
                 <div className="text-center space-y-2 mt-4">
                     <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground/90 transform transition-all hover:scale-[1.01]">
-                        Welcome to Benchwarmer
+                        Welcome to AlgoBrawl
                     </h1>
                     <p className="text-muted-foreground/80 max-w-lg mx-auto text-sm sm:text-base font-medium">
                         Upload your research papers and algorithm to begin extracting, benchmarking, and optimizing interactive models side-by-side.

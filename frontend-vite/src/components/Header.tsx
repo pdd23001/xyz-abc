@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Bot, BarChart2 } from "lucide-react"
-import { BenchwarmerLogo } from "@/components/BenchwarmerLogo"
+import { AlgoBrawlLogo } from "@/components/AlgoBrawlLogo"
 
 
 export function Header() {
@@ -13,7 +13,7 @@ export function Header() {
                 {/* empty space for centering */}
                 <div className="flex-1" />
                 <Link to="/" className="flex items-center justify-center">
-                    <BenchwarmerLogo className="text-xl" />
+                    <AlgoBrawlLogo className="text-xl" />
                 </Link>
                 <nav className="flex-1 flex justify-end items-center space-x-6 text-sm font-medium">
                     <Link

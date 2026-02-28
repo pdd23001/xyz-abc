@@ -140,7 +140,7 @@ export default function ChatPage() {
                                 </div>
 
                                 {/* Right Column: Chat Input */}
-                                <div className="lg:col-span-8 flex flex-col h-full min-h-[300px]">
+                                <div className="lg:col-span-8 flex flex-col justify-center h-full min-h-[300px]">
                                     <ChatPanel
                                         isWelcome
                                         messages={messages}
@@ -271,7 +271,6 @@ export default function ChatPage() {
                     </div>
                 )}
             </div>
-        </div>
-        </Layout >
+        </Layout>
     )
 }
