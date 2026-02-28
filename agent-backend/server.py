@@ -51,6 +51,13 @@ app.add_middleware(
 )
 
 
+# ─── Health Check ─────────────────────────────────────────────────────────────
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 # ─── Data Models ──────────────────────────────────────────────────────────────
 
 class FileAttachment(BaseModel):
