@@ -1,8 +1,8 @@
-# AI Algo Metric
+# AlgoBrawl
 
 **Benchmarking should not be a bottleneck of innovation.**
 
-benchwarmer.ai automates the painful workflow of algorithm benchmarking. Upload your algorithm and the research papers you want to compete against — a multi-agent orchestration framework extracts algorithms from the papers, generates runnable implementations, executes everything in parallel cloud sandboxes, and produces publication-ready comparison charts. What used to take days now takes minutes.
+AlgoBrawl automates the painful workflow of algorithm benchmarking. Upload your algorithm and the research papers you want to compete against — a multi-agent orchestration framework extracts algorithms from the papers, generates runnable implementations, executes everything in parallel cloud sandboxes, and produces publication-ready comparison charts. What used to take days now takes minutes.
 
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 ![React](https://img.shields.io/badge/react-19-61DAFB)
@@ -135,7 +135,7 @@ Modal Execution Architecture:
 
 ### Fetch.ai Agentverse
 
-The benchwarmer agent has also been deployed on [Fetch.ai's Agentverse](https://agentverse.ai) using their **ASI:One Pro** model. This makes the benchmarking agent discoverable and callable by other autonomous agents in the Agentverse ecosystem — enabling multi-agent workflows where, for example, a research agent could automatically trigger benchwarmer to validate algorithmic claims from a newly published paper.
+The AlgoBrawl agent has also been deployed on [Fetch.ai's Agentverse](https://agentverse.ai) using their **ASI:One Pro** model. This makes the benchmarking agent discoverable and callable by other autonomous agents in the Agentverse ecosystem — enabling multi-agent workflows where, for example, a research agent could automatically trigger AlgoBrawl to validate algorithmic claims from a newly published paper.
 
 ---
 
@@ -168,7 +168,7 @@ The benchwarmer agent has also been deployed on [Fetch.ai's Agentverse](https://
 ## Project Structure
 
 ```
-Benchwarmer.AI/
+AlgoBrawl/
 ├── agent-backend/
 │   ├── server.py                    # FastAPI app — SSE chat, REST endpoints
 │   ├── benchwarmer/
@@ -208,7 +208,7 @@ Benchwarmer.AI/
 │   │   ├── components/
 │   │   │   ├── Sidebar.tsx          # Navigation, algorithms, chat history
 │   │   │   ├── Layout.tsx           # App shell layout
-│   │   │   ├── BenchwarmerLogo.tsx  # Animated orbiting logo
+│   │   │   ├── AlgoBrawlLogo.tsx    # Animated orbiting logo
 │   │   │   └── chat/
 │   │   │       ├── MessageList.tsx  # Chat message rendering
 │   │   │       ├── ChatInput.tsx    # Message input with file uploads
@@ -245,8 +245,8 @@ Benchwarmer.AI/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/Benchwarmer.AI.git
-cd Benchwarmer.AI
+git clone https://github.com/your-org/AlgoBrawl.git
+cd AlgoBrawl
 ```
 
 ### 2. Backend setup
