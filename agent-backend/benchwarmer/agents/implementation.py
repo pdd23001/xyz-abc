@@ -169,7 +169,7 @@ class ImplementationAgent:
     def __init__(
         self,
         api_key: str | None = None,
-        model: str = "claude-opus-4-6",
+        model: str = "claude-sonnet-4-20250514",
     ) -> None:
         try:
             import anthropic
