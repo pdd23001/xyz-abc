@@ -53,7 +53,7 @@ app.add_middleware(
 
 # ─── Health Check ─────────────────────────────────────────────────────────────
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "ok"}
 
