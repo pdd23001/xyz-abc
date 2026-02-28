@@ -15,6 +15,7 @@ import os
 import re
 from typing import Any, Optional
 
+from benchwarmer.utils.algorithm_sandbox import execute_algorithm_code
 from benchwarmer.utils.modal_sandbox import execute_algorithm_code_modal
 
 logger = logging.getLogger(__name__)
@@ -304,8 +305,12 @@ class ImplementationAgent:
 
             last_code = code
 
-            # Execute and smoke test inside Modal sandbox
-            result = execute_algorithm_code_modal(code, problem_class, pool=pool)
+            # Execute and smoke test — try Modal first, fall back to local
+            try:
+                result = execute_algorithm_code_modal(code, problem_class, pool=pool)
+            except Exception as modal_err:
+                logger.warning("Modal sandbox unavailable (%s), falling back to local execution", modal_err)
+                result = execute_algorithm_code(code, problem_class)
 
             if result["success"]:
                 logger.info(
