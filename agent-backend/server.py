@@ -413,6 +413,8 @@ async def chat_turn(request: ChatRequest):
     _tools_called: list[str] = []
 
     _last_tool_input: dict = {}
+    _pending_algorithm_choices: list = []
+    _pending_choice_prompt: dict = {}
 
     def progress_cb(event: dict):
         """Called from the worker thread — enqueue event to the async queue."""
@@ -442,6 +444,8 @@ async def chat_turn(request: ChatRequest):
                 }
                 for i, s in enumerate(agent.state.algo_specs)
             ]
+            _pending_algorithm_choices.clear()
+            _pending_algorithm_choices.extend(algos)
             try:
                 loop.call_soon_threadsafe(q.put_nowait, {
                     "type": "algorithm_select",
@@ -490,6 +494,8 @@ async def chat_turn(request: ChatRequest):
                         "description": f"{m.group(3)} instances — {m.group(4).strip()}",
                     })
                 if suite_opts:
+                    _pending_choice_prompt.clear()
+                    _pending_choice_prompt.update({"id": "benchmark_suite", "title": "Select a benchmark suite", "options": suite_opts, "multiSelect": False})
                     try:
                         loop.call_soon_threadsafe(q.put_nowait, {
                             "type": "choice_prompt",
@@ -514,6 +520,8 @@ async def chat_turn(request: ChatRequest):
                         "description": f"{m.group(2)} nodes",
                     })
                 if inst_opts:
+                    _pending_choice_prompt.clear()
+                    _pending_choice_prompt.update({"id": "benchmark_instances", "title": "Select instances to load", "options": inst_opts, "multiSelect": True})
                     try:
                         loop.call_soon_threadsafe(q.put_nowait, {
                             "type": "choice_prompt",
@@ -556,10 +564,18 @@ async def chat_turn(request: ChatRequest):
                     plot_image = f"data:image/png;base64,{encoded}"
                 _agent.state.last_plot_path = None
 
+            # Build metadata for rich UI elements (buttons, selectors)
+            _metadata = {}
+            if _pending_algorithm_choices:
+                _metadata["algorithmChoices"] = list(_pending_algorithm_choices)
+            if _pending_choice_prompt:
+                _metadata["choicePrompt"] = dict(_pending_choice_prompt)
+
             # Always persist to DB (even if the SSE client disconnected)
             save_message(
                 session_id=_sid, role="assistant",
                 content=reply, tools=None, plot_image=plot_image,
+                metadata=_metadata if _metadata else None,
             )
 
             # Emit interactive choice prompts based on pipeline state
@@ -580,28 +596,19 @@ async def chat_turn(request: ChatRequest):
                 if gens:
                     gen_names = [g.type for g in gens]
                     gen_desc = f" ({', '.join(gen_names)})"
+                _instance_source_opts = [
+                    {"value": "generators", "label": "Generators", "description": f"Use proposed graph generators{gen_desc}"},
+                    {"value": "custom", "label": "Custom JSON", "description": "Load from your own instance file"},
+                    {"value": "benchmark suite", "label": "Benchmark Suite", "description": "Use standard benchmark instances (DIMACS, BiqMac, etc.)"},
+                ]
+                _pending_choice_prompt.clear()
+                _pending_choice_prompt.update({"id": "instance_source", "title": "How would you like to provide instances?", "options": _instance_source_opts, "multiSelect": False})
                 try:
                     loop.call_soon_threadsafe(q.put_nowait, {
                         "type": "choice_prompt",
                         "id": "instance_source",
                         "title": "How would you like to provide instances?",
-                        "options": [
-                            {
-                                "value": "generators",
-                                "label": "Generators",
-                                "description": f"Use proposed graph generators{gen_desc}",
-                            },
-                            {
-                                "value": "custom",
-                                "label": "Custom JSON",
-                                "description": "Load from your own instance file",
-                            },
-                            {
-                                "value": "benchmark suite",
-                                "label": "Benchmark Suite",
-                                "description": "Use standard benchmark instances (DIMACS, BiqMac, etc.)",
-                            },
-                        ],
+                        "options": _instance_source_opts,
                         "multi_select": False,
                     })
                 except RuntimeError:

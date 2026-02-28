@@ -23,7 +23,7 @@ def init_db():
     # This is a no-op kept for backward compatibility with server.py startup.
     _get_client()  # validate credentials early
 
-def save_message(session_id: str, role: str, content: str, tools: Optional[List[Dict]] = None, plot_image: Optional[str] = None):
+def save_message(session_id: str, role: str, content: str, tools: Optional[List[Dict]] = None, plot_image: Optional[str] = None, metadata: Optional[Dict] = None):
     try:
         sb = _get_client()
         row = {
@@ -32,6 +32,7 @@ def save_message(session_id: str, role: str, content: str, tools: Optional[List[
             "content": content,
             "tools": json.dumps(tools) if tools else None,
             "plot_image": plot_image,
+            "metadata": json.dumps(metadata) if metadata else None,
         }
         sb.table("messages").insert(row).execute()
     except Exception as e:
@@ -53,6 +54,10 @@ def get_messages(session_id: str) -> List[Dict[str, Any]]:
                 tools = json.loads(row["tools"]) if row.get("tools") else []
             except (json.JSONDecodeError, TypeError):
                 tools = []
+            try:
+                metadata = json.loads(row["metadata"]) if row.get("metadata") else None
+            except (json.JSONDecodeError, TypeError):
+                metadata = None
             msg = {
                 "id": str(row["id"]),
                 "role": row["role"],
@@ -60,6 +65,11 @@ def get_messages(session_id: str) -> List[Dict[str, Any]]:
                 "tools": tools,
                 "plotImage": row.get("plot_image"),
             }
+            if metadata:
+                if metadata.get("algorithmChoices"):
+                    msg["algorithmChoices"] = metadata["algorithmChoices"]
+                if metadata.get("choicePrompt"):
+                    msg["choicePrompt"] = metadata["choicePrompt"]
             messages.append(msg)
         return messages
     except Exception as e:

@@ -25,8 +25,11 @@ interface MessageListProps {
  */
 function stripAlgorithmListText(content: string): string {
     return content
-        // Remove "Which of these paper algorithms..." prompt (including multi-line)
-        .replace(/Which of these[\s\S]*?\(Reply by index[^)]*\)\s*/gi, "")
+        // Remove "Which ... (Reply by index ...)" prompt — covers all variants:
+        //   "Which of these...", "Which algorithms...", etc.
+        .replace(/Which\s+[\s\S]*?\(Reply by[^)]*\)\s*/gi, "")
+        // Remove "Found N algorithms..." line with inline numbered entry
+        .replace(/^.*Found\s+\d+\s+algorithm[^:]*:\s*\d+\.\s*\S+\s*[-–].+$/gm, "")
         // Remove any line that looks like a numbered algorithm entry — covers all bold/unbold variants:
         //   "0. **name**: desc"  |  "**0. name**: desc"  |  "0. name: desc"  |  "**0.** **name**: desc"
         .replace(/^\s*\*{0,2}\d+\.?\*{0,2}\s+\*{0,2}[\w_]+\*{0,2}\s*[-–:].+$/gm, "")
