@@ -245,10 +245,13 @@ async def remove_session(session_id: str):
     _SESSIONS.pop(session_id, None)
     return {"ok": True}
 
+class SessionUpdate(BaseModel):
+    title: str
+
 @app.patch("/api/sessions/{session_id}")
-async def update_session(session_id: str, body: dict):
+async def update_session(session_id: str, body: SessionUpdate):
     """Rename a chat session."""
-    title = body.get("title", "").strip()
+    title = body.title.strip()
     if not title:
         raise HTTPException(status_code=400, detail="Title required")
     rename_session(session_id, title)

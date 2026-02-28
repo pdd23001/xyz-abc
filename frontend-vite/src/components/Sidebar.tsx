@@ -44,11 +44,13 @@ export function Sidebar({
     const [editingId, setEditingId] = useState<string | null>(null)
     const [editingTitle, setEditingTitle] = useState("")
 
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || ""
+
     // Fetch chat history
     useEffect(() => {
         const fetchSessions = async () => {
             try {
-                const res = await fetch("/api/sessions")
+                const res = await fetch(`${API_BASE}/api/sessions`)
                 if (res.ok) {
                     const data = await res.json()
                     setSessions(data)
@@ -67,7 +69,7 @@ export function Sidebar({
 
     const handleDeleteSession = async (sessionId: string) => {
         try {
-            const res = await fetch(`/api/sessions/${sessionId}`, { method: "DELETE" })
+            const res = await fetch(`${API_BASE}/api/sessions/${sessionId}`, { method: "DELETE" })
             if (res.ok) {
                 setSessions((prev) => prev.filter((s) => s.id !== sessionId))
             }
@@ -88,7 +90,7 @@ export function Sidebar({
             return
         }
         try {
-            const res = await fetch(`/api/sessions/${sessionId}`, {
+            const res = await fetch(`${API_BASE}/api/sessions/${sessionId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title: trimmed }),
